@@ -7,7 +7,7 @@ cur = db.cursor()
 f = open('dict.txt', 'r')
 args_list = []
 for line in f:
-    tup = re.findall(r'(\w+)\s+(.*)', line)
+    tup = re.findall(r'(\w+)\s+(.*)', line)[0]
     args_list.append(tup)
 f.close()
 sql = "insert into words(word,mean)values(%s,%s);"
