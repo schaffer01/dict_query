@@ -10,21 +10,24 @@ class Database:
     def generate_cur(self):
         self.cur = self.db.cursor()
 
-    def register(self, name, passwd):
+    def check_name(self, name):
         sql = 'select * from user where name=s%'
         self.cur.execute(sql, name)
         if self.cur.fetchone():
             return False
         else:
-            try:
-                sql = 'insert into user(name,passwd) values(s%,s%)'
-                self.cur.execute(sql, [name, passwd])
-                self.db.commit()
-            except Exception as e:
-                print("写入出错:", e)
-                self.db.rollback()
-                return
             return True
+
+    def register(self, name, passwd):
+        try:
+            sql = 'insert into user(name,passwd) values(s%,s%)'
+            self.cur.execute(sql, [name, passwd])
+            self.db.commit()
+        except Exception as e:
+            print("写入出错:", e)
+            self.db.rollback()
+            return False
+        return True
 
     def log_in(self, name, passwd):
         sql = "select * from user where name=s% and passwd=s%"
@@ -36,6 +39,30 @@ class Database:
             print("输入有误")
             return False
 
-    def close_cur(self):
-        self.cur.close()
+    def do_query(self, word):
+        sql = "select mean from words where word=s%"
+        self.cur.execute(sql, word)
+        mean = self.cur.fetchall()[0]
+        if mean:
+            return mean
+        else:
+            return '无此单词'
 
+    def do_insert_hist(self, name, word):
+        try:
+            sql = "insert into hist(name,word) values(%s,%s)"
+            self.cur.execute(sql, [name, word])
+            self.db.commit()
+            return 'ok'
+        except Exception as e:
+            print(e)
+            self.db.rollback()
+            return e
+
+    def do_hist(self, name):
+        sql = "select word,query_time from hist where name=%s order by query_time desc limit 10"
+        self.cur.execute(sql, [name])
+        data=self.cur.fetchall()
+        if not data:
+            return '无历史记录'
+        return data
