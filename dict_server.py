@@ -22,12 +22,12 @@ def handle(connfd):
             data = connfd.recv(1024).decode()
         except Exception as e:
             print(e)
-            return
+            break
         if not data:
-            connfd.close()
-            os._exit(0)
+            break
         print(connfd.getpeername(),':',data)
-
+    connfd.close()
+    sys.exit(0)
 
 
 def main():  # 创建启动函数
