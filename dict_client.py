@@ -36,19 +36,20 @@ def do_hist(name):
 
 
 def login_success(name, passwd):
-    print("""
-            ==========QUERY==========
-            1.查词   2.历史记录   3.退出
-            """)
-    cmd = input('请输入编号>>')
-    if cmd == '1':
-        do_query(name)
-    elif cmd == '2':
-        do_hist(name)
-    elif cmd == '3':
-        return
-    else:
-        print('输入有误，重新输入>>')
+    while True:
+        print("""
+                ==========QUERY==========
+                1.查词   2.历史记录   3.退出
+                """)
+        cmd = input('请输入编号>>')
+        if cmd == '1':
+            do_query(name)
+        elif cmd == '2':
+            do_hist(name)
+        elif cmd == '3':
+            return
+        else:
+            print('输入有误，重新输入>>')
 
 
 def do_register():

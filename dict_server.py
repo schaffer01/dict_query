@@ -54,8 +54,9 @@ def do_hist_server(connfd, name):
         connfd.send(data.encode())
         sleep(0.1)
         connfd.send(b'##')
+        return
     for item in data:
-        connfd.send("%-15s %s"%item.encode())
+        connfd.send(("%-15s %s"%item).encode())
         sleep(0.1)
     connfd.send(b'##')
 
@@ -78,14 +79,14 @@ def handle(connfd, addr):
         elif data.split(' ')[0] == 'R2':
             do_register_server(connfd, data.split(' ')[1], data.split(' ')[2])
         elif data.split(' ')[0] == 'L':
-            do_login_server(connfd, data.split('')[1], data.split(' ')[2])
+            do_login_server(connfd, data.split(' ')[1], data.split(' ')[2])
         elif data.split(' ')[0] == 'Q':
-            do_query_server(connfd, data.split('')[1], data.split(' ')[2])
+            do_query_server(connfd, data.split(' ')[1], data.split(' ')[2])
         elif data.split(' ')[0] == 'H':
-            do_hist_server(connfd, data.split('')[1])
+            do_hist_server(connfd, data.split(' ')[1])
     db.cur.close()
     connfd.close()
-    sys.exit(('客户端', addr, '退出'))
+    sys.exit('客户端退出')
 
 
 def main():  # 创建启动函数
